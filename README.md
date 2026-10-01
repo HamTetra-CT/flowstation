@@ -15,6 +15,21 @@
 
 ---
 
+## HamTetra-CT community fork
+
+This fork is maintained by the Portuguese [HamTetra community](https://hamtetra.pt/).
+It builds on [Razvan Zeces / YO6RZV's FlowStation](https://github.com/razvanzeces/flowstation)
+and keeps the original project credits and license.
+
+The `main` branch includes both community improvements:
+
+- Telegram recipients can specify an optional Topic ID, including multiple topics in the same group. Existing `chat_ids` configurations remain supported.
+- `station_name` sets the Telegram display name independently of `service_name`, which continues to identify the systemd unit for service control.
+
+Clone this repository's `main` branch for a new installation; no additional patches are needed.
+Contributions are welcome through pull requests to [HamTetra-CT/flowstation](https://github.com/HamTetra-CT/flowstation/pulls).
+The installation guide below describes the source build; install the same Rust and SoapySDR prerequisites as upstream.
+
 ## What is FlowStation?
 
 FlowStation is a fully functional **TETRA base station in software**. Plug in a LimeSDR, point it at your TETRA radios, and you have a working private TETRA cell — group calls, individual calls, SDS messaging, Brew/BrandMeister interconnect, and a live web dashboard. No proprietary infrastructure required.
@@ -91,13 +106,27 @@ Full step-by-step installation guide (Raspberry Pi + LimeSDR): **[install.flowst
 ### Quick start (from source)
 
 ```bash
-git clone https://github.com/razvanzeces/flowstation.git
+git clone https://github.com/HamTetra-CT/flowstation.git
 cd flowstation
 cp example_config/config.toml ./config.toml
 # Edit config.toml — set tx_freq, rx_freq, mcc, mnc at minimum
-cargo build --release
+cargo build --release --locked
 ./target/release/bluestation-bs config.toml
 ```
+
+### Updating this community fork
+
+For an installation cloned from this repository, keep `origin` pointing to
+`https://github.com/HamTetra-CT/flowstation.git` and stay on `main`:
+
+```bash
+git pull --ff-only origin main
+cargo build --release --locked
+```
+
+Restart the actual service configured in `service_name` after rebuilding. Keep your
+station's `config.toml` and bot credentials local. Never replace an existing station
+configuration with the example file during an update.
 
 ### As a systemd service
 
